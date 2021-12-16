@@ -2,6 +2,13 @@
 //THE TEST SERVER IS RUNNING ON LOCALHOST:3000//
 ////////////////////////////////////////////////
 
+const { default: axios } = require("axios")
+const { format } = require("express/lib/response")
+
+// const { default: axios } = require("axios")
+
+// const { default: axios } = require("axios")
+
 // PROBLEM 1
 /*
     In the index.html file in this folder there is a button with an id of 'say-hello-button'!
@@ -10,6 +17,8 @@
 */
 
 // CODE HERE
+
+const sayHelloButton = document.querySelector(`#say-hello-button`)
 
 
 // PROBLEM 2
@@ -20,6 +29,14 @@
 */
 
 // CODE HERE
+
+function changeColor (event) {
+    event.preventDefault()
+    sayHelloButton.style.color = "white"
+    sayHelloButton.style.backgroundColor = "black"  
+}
+
+sayHelloButton.addEventListener("mouseover", changeColor)
 
 
 // PROBLEM 3
@@ -32,6 +49,15 @@
 */
 
 // CODE HERE
+
+function changeColorBack (event) {
+    event.preventDefault()
+    sayHelloButton.style.color = "black"
+    sayHelloButton.style.backgroundColor = "#EFEFEF"
+}
+
+sayHelloButton.addEventListener("mouseout", changeColorBack)
+
 
 
 // PROBLEM 4
@@ -54,6 +80,7 @@ const sayHello = () => {
 
 // CODE HERE
 
+sayHelloButton.addEventListener('click', sayHello);
 
 // PROBLEM 5 
 /*
@@ -67,10 +94,21 @@ const sayHello = () => {
 */ 
 
 const ohMy = () => {
-    // YOUR CODE HERE
+    axios.get('http://localhost:3000/animals')
+    .then(res => {
+        for (i = 0; i < res.data.length; i++){
+            let p = document.createElement('p');
+            p.textContent = `${res.data[i]}`;
+
+            let htmlBody = document.querySelector("body");
+                htmlBody.appendChild(p);
+                    //console.log(res.data[i]);
+        }
+    })
+    .catch(err => console.log(err))
 }
 
-document.getElementById('animals-button').addEventListener('click', ohMy)
+document.getElementById('animals-button').addEventListener('click', ohMy);
 
 
 // PROBLEM 6 
@@ -86,9 +124,20 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
     We'll be updating this function in the next problem.
 */
 
-const repeatMyParam = () => {
-    //YOUR CODE HERE
+const repeatMyParam = (param) => {
+    axios.get(`http://localhost:3000/repeat/zebra`)
+        .then(res => {
+            document.querySelector(`#repeat-text`).textcontext = `${res.data}`
+            console.log(res.data)
+        })
+    .catch(err => console.log(err))
+
 }
+
+
+
+document.querySelector(`#repeat-button`).addEventListener(`click`, repeatMyParam)
+
 
 // PROBLEM 7
 /*
@@ -99,7 +148,7 @@ const repeatMyParam = () => {
 
 // Code in the repeatMyParam function above
 
-
+//code added to funciton above
 
 // PROBLEM 8
 /*
@@ -112,7 +161,14 @@ const repeatMyParam = () => {
 
 // CODE HERE
 
+function getSomething (event) {
+    axios.get(`http://localhost:3000/?search=hello&search=hola`)
+    .then (res => {
+        console.log(res.data)
+    })
+}
 
+document.querySelector(`#query-button`).addEventListener('click', getSomething)
 
 ////////////////
 //INTERMEDIATE//
@@ -126,6 +182,7 @@ const repeatMyParam = () => {
 */
 
 // Code in the ohMy function in Problem 5
+//function added to successfully
 
 // PROBLEM 10 
 /*
@@ -138,7 +195,7 @@ const repeatMyParam = () => {
 
 // Edit code in Problem 8
 
-
+// message tells us the query was empty with no query, with mutilple queries, query values are separated by an '&'
 
 ////////////
 //ADVANCED//
@@ -164,3 +221,60 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE 
+
+// function createFood (event) {
+//     let foodInput = document.querySelector(`input`)
+//     const body = { 
+//         newFood: `${foodInput}`,
+//     }
+//     axios.get(`http://localhost:3000/food`, body)
+//         .then (res => {
+//             // console.log(res.data)
+//             for (i =0; i < res.data.length; i++){
+//             let foodItem = document.createElement('li');
+//             foodItem.textContent = `${res.data[i]}`;
+
+//             let form = document.querySelector('form');
+//             form.appendChild(foodItem);
+//             }
+//         })
+// }
+
+
+function createFood (event) {
+    event.preventDefault()
+
+    let foodInput = document.querySelector('input')
+    let foodList = document.querySelector('form')
+    let foodName = document.createElement('ul')
+    
+    foodName.textContent = foodInput.value
+
+    foodList.appendChild(foodName)
+
+    foodInput.value = ' '
+
+}
+
+document.querySelector('form').addEventListener('submit',createFood)
+
+
+
+
+
+// const ohMy = () => {
+//     axios.get('http://localhost:3000/animals')
+//     .then(res => {
+//         for (i = 0; i < res.data.length; i++){
+//             let p = document.createElement('p');
+//             p.textContent = `${res.data[i]}`;
+
+//             let htmlBody = document.querySelector("body");
+//                 htmlBody.appendChild(p);
+//                     //console.log(res.data[i]);
+//         }
+//     })
+//     .catch(err => console.log(err))
+// }
+
+// document.getElementById('animals-button').addEventListener('click', ohMy);
